@@ -1,4 +1,4 @@
-const metaData = require('./package.json');
+const metaData = require("./package.json");
 const update = require("./update");
 
 const method = process.argv[2];
