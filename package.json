@@ -1,0 +1,13 @@
+{
+  "name": "gadwick-test",
+  "description": "Provides support for integrating test suites with Gadwick",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "update": "node update.ts"
+  },
+  "dependencies": {
+    "@types/node": "^14.14.0",
+    "axios": "^0.20.0"
+  }
+}
