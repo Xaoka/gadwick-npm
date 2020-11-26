@@ -70,4 +70,4 @@ async function updateStubs()
     });
 }
 
-updateStubs();
+module.exports = { updateStubs }
