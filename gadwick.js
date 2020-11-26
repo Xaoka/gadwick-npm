@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const metaData = require("./package.json");
 const update = require("./update");
 
