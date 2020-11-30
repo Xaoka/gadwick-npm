@@ -6,7 +6,7 @@ const gadwickEndpoint = "http://localhost:3003";
 
 async function configureGadwick()
 {
-    const userID = prompt("User ID: ")
+    const userID = prompt("User Auth ID: ")
     let user;
     try
     {

@@ -11,11 +11,17 @@ async function updateStubs()
     }
     const config = JSON.parse(fs.readFileSync('gadwick-config.json', 'utf8'));
     console.log(`Finding features from Gadwick...`)
+    if (!config.client_secret)
+    {
+        console.log(`No client secret found for app. Run 'gadwick config'.`);
+        return;
+    }
     const testSuiteDirectoryPath = config.test_directory;
-    const response = await Axios.get(`http://localhost:3003/features`)
+    const response = await Axios.get(`http://localhost:3003/features/s/${config.client_secret}`)
     const features = response.data;
     // console.dir(response.data.data);
     // console.log(`Found ${features.length} features:\n${features.map((feature) => feature.feature_name).join("\n")}`)
+    // TODO: Resolve file name conflicts between local & gadwick
     fs.readdir(testSuiteDirectoryPath, function (err, files) {
         //handling error
         if (err) {
