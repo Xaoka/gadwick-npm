@@ -71,7 +71,7 @@ async function configureGadwick()
         while (clientSecret.length === 0)
     }
     
-    fs.writeFile(`gadwick-config.json`, JSON.stringify({ test_directory, clientSecret }, null, 2), (err) => {
+    fs.writeFile(`gadwick-config.json`, JSON.stringify({ test_directory, client_secret: clientSecret }, null, 2), (err) => {
     })
 }
 
