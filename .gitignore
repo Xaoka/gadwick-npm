@@ -1,1 +1,3 @@
 node_modules/
+gadwick-config.json
+*.spec.js

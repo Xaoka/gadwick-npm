@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const metaData = require("./package.json");
-const update = require("./update");
+const { updateStubs } = require("./update");
+const { configureGadwick } = require("./configure");
 
 const method = process.argv[2];
 
@@ -29,5 +30,9 @@ if (method === "version")
 
 if (method === "update")
 {
-    update();
+    updateStubs();
+}
+if (method === "configure")
+{
+    configureGadwick();
 }

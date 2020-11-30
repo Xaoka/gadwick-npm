@@ -1,12 +1,21 @@
 const Axios = require(`axios`);
 const fs = require('fs');
 const path = require('path')
-
-const testSuiteDirectoryPath = '../cypress/integration';
+let config;
 
 async function updateStubs()
 {
+    try
+    {
+        config = require('./gadwick-config.json');
+    }
+    catch (error)
+    {
+        console.log(`Gadwick has not been configured, run 'gadwick configure' first.`);
+        return;
+    }
     console.log(`Finding features from Gadwick...`)
+    const testSuiteDirectoryPath = config.test_directory;
     const response = await Axios.get(`http://localhost:3003/features`)
     const features = response.data;
     // console.dir(response.data.data);
@@ -53,11 +62,17 @@ async function updateStubs()
                 });
             }
         }
-        const mapFile = `{\n\t"ids": {${idMap.map((id) => `\n\t\t"${id.id}": "${id.name}"`)}\n\t},\n\t"names": {${idMap.map((id) => `\n\t\t"${id.name}": "${id.id}"`)}\n\t}\n}`
-        fs.writeFile(`mapFile.json`, mapFile, (err) => {
+        const map = { ids: {}, names: {} };
+        for (const id of idMap)
+        {
+            map.ids[id.id] = id.name;
+            map.names[id.name] = id.id;
+        }
+        const newConfig = JSON.stringify({ ...config, idMap: map }, null, 2);
+        fs.writeFile(`gadwick-config.json`, newConfig, (err) => {
             if (err) throw err;
-            console.log(`New mapfile created:`);
-            console.log(mapFile);
+            console.log(`Updated config with mapping:`);
+            console.log(newConfig);
         });
         const gadwickNames = features.map((f) => f.feature_name);
         for (const localFeature of testFiles)

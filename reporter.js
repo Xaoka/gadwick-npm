@@ -13,7 +13,7 @@ const {
 } = Mocha.Runner.constants;
 const Axios = require(`axios`);
 const version = require('../package.json').version;
-const IDMapping = require('./mapFile')
+const IDMapping = require('./mapFile').idMap
 
 // this reporter outputs test results, indenting two spaces per suite
 class MyReporter {
