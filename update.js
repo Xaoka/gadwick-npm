@@ -5,15 +5,11 @@ let config;
 
 async function updateStubs()
 {
-    try
-    {
-        config = require('./gadwick-config.json');
-    }
-    catch (error)
-    {
+    if (!fs.statSync("gadwick-config.json").isFile()) {
         console.log(`Gadwick has not been configured, run 'gadwick configure' first.`);
         return;
     }
+    const config = JSON.parse(fs.readFileSync('gadwick-config.json', 'utf8'));
     console.log(`Finding features from Gadwick...`)
     const testSuiteDirectoryPath = config.test_directory;
     const response = await Axios.get(`http://localhost:3003/features`)
