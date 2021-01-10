@@ -6,3 +6,9 @@ NPM module designed to sync the test suite with the features described in Gadwic
 
 * Easy reporting of results to Gadwick
 * Easy generation of test stubs based on Gadwick features
+
+## Development
+
+Deploy via npm publish
+
+Test locally via: node gadwick COMMAND

@@ -3,9 +3,16 @@ const fs = require('fs');
 const path = require('path')
 let config;
 
+const gadwickEndpoint = "http://localhost:3003"// "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
+
 async function updateStubs()
 {
-    if (!fs.existsSync(path))
+    try
+    {
+        fs.existsSync(path)
+    }
+    catch (e)
+    {
         console.log(`Gadwick has not been configured, run 'gadwick configure' first.`);
         return;
     }
@@ -17,7 +24,7 @@ async function updateStubs()
         return;
     }
     const testSuiteDirectoryPath = config.test_directory;
-    const response = await Axios.get(`https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com/features/s/${config.client_secret}`)
+    const response = await Axios.get(`${gadwickEndpoint}/features/s/${config.client_secret}`)
     const features = response.data;
     // console.dir(response.data.data);
     // console.log(`Found ${features.length} features:\n${features.map((feature) => feature.feature_name).join("\n")}`)

@@ -2,20 +2,21 @@ const prompt = require('prompt-sync')({sigint: true});
 const fs = require('fs');
 const Axios = require(`axios`);
 
-const gadwickEndpoint = "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
+const gadwickEndpoint = "http://localhost:3003"// "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
 
 async function configureGadwick()
 {
-    const userID = prompt("User Auth ID: ")
+    const userKey = prompt("User API Key (Can be found at https://gadwick.co.uk/dashboard/settings): ");
     let user;
     try
     {
-        const response = await Axios.get(`${gadwickEndpoint}/users/auth/${userID}`);
+        const response = await Axios.get(`${gadwickEndpoint}/users/key/${userKey}`);
         user = response.data[0];
-        console.log(`Verified user account, user ID ${user.id}`)
+        console.log(`Verified user account for ${user.name}.`)
     }
     catch (error)
     {
+        console.log(error)
         console.error(`Could not get user from Gadwick servers`);
         process.exit(1);
     }
@@ -66,12 +67,12 @@ async function configureGadwick()
         // Save credentials
         do
         {
-            clientSecret = prompt("Client Secret: ");
+            clientSecret = prompt("Application Client Secret (Found on the app's settings page) : ");
         }
         while (clientSecret.length === 0)
     }
     
-    fs.writeFile(`gadwick-config.json`, JSON.stringify({ test_directory, client_secret: clientSecret }, null, 2), (err) => {
+    fs.writeFile(`gadwick-config.json`, JSON.stringify({ test_directory, client_secret: clientSecret, api_key: userKey }, null, 2), (err) => {
     })
 }
 

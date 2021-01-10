@@ -14,6 +14,8 @@ const {
 const Axios = require(`axios`);
 const version = require('../package.json').version;
 const IDMapping = require('./mapFile').idMap
+const config = require('./gadwick-config.json');
+const gadwickEndpoint = "http://localhost:3003"// "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
 
 // TODO: Start a new session on gadwick to associate results with
 class MyReporter {
@@ -36,7 +38,7 @@ class MyReporter {
         {
           const id =  IDMapping.names[suite.title];
           console.dir(`Uploading results of the test suite for feature "${suite.title} (${id}"`);
-          Axios.post(`https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com`, { feature_id: id, passed: (stats.failures === 0), version})
+          Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed: (stats.failures === 0), version, api_key: config.api_key, automated: "TRUE" })
         }
       })
       .on(EVENT_TEST_PASS, test => {
