@@ -15,7 +15,7 @@ const Axios = require(`axios`);
 const version = require('../package.json').version;
 const IDMapping = require('./mapFile').idMap
 
-// this reporter outputs test results, indenting two spaces per suite
+// TODO: Start a new session on gadwick to associate results with
 class MyReporter {
   constructor(runner) {
     this._indents = 0;
@@ -36,7 +36,7 @@ class MyReporter {
         {
           const id =  IDMapping.names[suite.title];
           console.dir(`Uploading results of the test suite for feature "${suite.title} (${id}"`);
-          Axios.post(`http://localhost:3003/results`, { feature_id: id, passed: (stats.failures === 0), version})
+          Axios.post(`https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com`, { feature_id: id, passed: (stats.failures === 0), version})
         }
       })
       .on(EVENT_TEST_PASS, test => {
