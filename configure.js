@@ -2,7 +2,7 @@ const prompt = require('prompt-sync')({sigint: true});
 const fs = require('fs');
 const Axios = require(`axios`);
 
-const gadwickEndpoint = "http://localhost:3003"// "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
+const gadwickEndpoint = "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
 
 async function configureGadwick()
 {
