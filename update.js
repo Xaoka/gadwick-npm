@@ -75,7 +75,7 @@ async function updateStubs()
                     `})`
                 ]
                 idMap.push({ id: gadwickFeature.id, name: gadwickFeature.name });
-                fs.writeFile(path.join(testSuiteDirectoryPath, `${gadwickFeature.name.replaceAll(" ", "_")}.spec.js`), fileData.join("\n"), (err) => {
+                fs.writeFile(path.join(testSuiteDirectoryPath, `${gadwickFeature.name.replace(/ /g, "_")}.spec.js`), fileData.join("\n"), (err) => {
                     if (err) throw err;
                     console.log(`New stub test file created for ${gadwickFeature.name}`);
                 });
