@@ -1,7 +1,7 @@
 {
   "name": "gadwick",
   "description": "Provides support for integrating test suites with Gadwick",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "type": "module",
   "scripts": {
     "update": "node update.ts"
