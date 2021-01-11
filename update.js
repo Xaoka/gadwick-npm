@@ -75,10 +75,14 @@ async function updateStubs()
                     `})`
                 ]
                 idMap.push({ id: gadwickFeature.id, name: gadwickFeature.name });
-                fs.writeFile(path.join(testSuiteDirectoryPath, `${gadwickFeature.name.replace(/[^a-zA-Z\d:]/g, "_")}.spec.js`), fileData.join("\n"), (err) => {
-                    if (err) throw err;
-                    console.log(`New stub test file created for ${gadwickFeature.name}`);
-                });
+                const fileName = gadwickFeature.name.replace(/[^a-zA-Z\d:]/g, "_");
+                if (!testFiles.includes(fileName))
+                {
+                    fs.writeFile(path.join(testSuiteDirectoryPath, `${fileName}.spec.js`), fileData.join("\n"), (err) => {
+                        if (err) throw err;
+                        console.log(`New stub test file created for ${gadwickFeature.name}`);
+                    });
+                }
             }
         }
         const map = config.idMap;
