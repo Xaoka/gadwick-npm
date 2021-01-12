@@ -12,13 +12,21 @@ const {
   EVENT_SUITE_END
 } = Mocha.Runner.constants;
 const Axios = require(`axios`);
-const version = require('../package.json').version;
-const IDMapping = require('./mapFile').idMap
-const config = require('./gadwick-config.json');
+let version, IDMapping, config;
+try
+{
+  version = require('../../package.json').version;
+  IDMapping = require('../../mapFile').idMap
+  config = require('../../gadwick-config.json');
+}
+catch (error)
+{
+  console.error(`Could not find required configuration files - make sure you have run "gadwick configure" before using this reporter.`)
+}
 const gadwickEndpoint = "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
 
 // TODO: Start a new session on gadwick to associate results with
-class MyReporter {
+class MochaReporter {
   constructor(runner) {
     this._indents = 0;
     const stats = runner.stats;
@@ -70,4 +78,4 @@ class MyReporter {
   }
 }
 
-module.exports = MyReporter;
+module.exports = MochaReporter;
