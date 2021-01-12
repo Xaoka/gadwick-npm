@@ -74,6 +74,7 @@ async function configureGadwick()
     
     fs.writeFile(`gadwick-config.json`, JSON.stringify({ test_directory, client_secret: clientSecret, api_key: userKey }, null, 2), (err) => {
     })
+    console.log(`Configuration complete. Run "gadwick update" to pull your features from gadwick`);
 }
 
 module.exports = { configureGadwick }

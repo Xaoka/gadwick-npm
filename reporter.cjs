@@ -21,13 +21,17 @@ try
 }
 catch (error)
 {
-  console.error(`Could not find required configuration files - make sure you have run "gadwick configure" before using this reporter.`)
+  console.error(`Could not find required configuration files - make sure you have run "gadwick configure" and "gadwick update" before using this reporter.`)
 }
 const gadwickEndpoint = "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
 
 // TODO: Start a new session on gadwick to associate results with
 class MochaReporter {
   constructor(runner) {
+    if (!version || !IDMapping || !config)
+    {
+      console.error(`Could not find required configuration files - make sure you have run "gadwick configure" and "gadwick update" before using this reporter.`)
+    }
     this._indents = 0;
     const stats = runner.stats;
     runner

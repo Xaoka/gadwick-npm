@@ -87,7 +87,7 @@ async function updateStubs()
                 }
             }
         }
-        const map = config.idMap;
+        const map = config.idMap || { ids: [], names: []};
         for (const id of idMap)
         {
             map.ids[id.id] = id.name;
