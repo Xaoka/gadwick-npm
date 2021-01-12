@@ -5,18 +5,28 @@ let config;
 
 const gadwickEndpoint = "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
 
+function toFileName(featureName)
+{
+    return featureName.replace(/[^a-zA-Z\d:]/g, "_");
+}
+
+function toFeatureName(fileName)
+{
+    return fileName.replace(/_/g, " ");
+}
+
 async function updateStubs()
 {
     try
     {
         fs.existsSync(path)
+        config = JSON.parse(fs.readFileSync('gadwick-config.json', 'utf8'));
     }
     catch (e)
     {
         console.log(`Gadwick has not been configured, run 'gadwick configure' first.`);
         return;
     }
-    const config = JSON.parse(fs.readFileSync('gadwick-config.json', 'utf8'));
     console.log(`Finding features from Gadwick...`)
     if (!config.client_secret)
     {
@@ -48,7 +58,7 @@ async function updateStubs()
                 if (file.endsWith('.spec.js')) {
                     // Do whatever you want to do with the file
                     // console.log(file); 
-                    testFiles.push(file.replace('.spec.js', ''));
+                    testFiles.push(toFeatureName(file).replace('.spec.js', ''));
                 }
             }
         });
@@ -77,14 +87,22 @@ async function updateStubs()
                     `})`
                 ]
                 idMap.push({ id: gadwickFeature.id, name: gadwickFeature.name });
-                const fileName = gadwickFeature.name.replace(/[^a-zA-Z\d:]/g, "_");
+                const fileName = toFileName(gadwickFeature.name);
                 if (!testFiles.includes(fileName))
                 {
-                    fs.writeFile(path.join(testSuiteDirectoryPath, `${fileName}.spec.js`), fileData.join("\n"), (err) => {
-                        if (err) throw err;
-                        console.log(`New stub test file created for ${gadwickFeature.name}`);
-                    });
+                    const outputFilePath = path.join(testSuiteDirectoryPath, `${fileName}.spec.js`);
+                    fs.writeFileSync(outputFilePath, fileData.join("\n"));
+                    console.log(`\x1b[32m%s\x1b[0m`, `New stub test file created for ${gadwickFeature.name}`);
                 }
+            }
+        }
+        const gadwickNames = features.map((f) => toFileName(f.name));
+        for (const localFeature of testFiles)
+        {
+            if (!gadwickNames.includes(localFeature))
+            {
+                console.log(`[LOCAL]\t${toFeatureName(localFeature)}`);
+                // TODO: Push feature to gadwick here
             }
         }
         const map = config.idMap || { ids: [], names: []};
@@ -94,19 +112,9 @@ async function updateStubs()
             map.names[id.name] = id.id;
         }
         const newConfig = JSON.stringify({ ...config, idMap: map }, null, 2);
-        fs.writeFile(`gadwick-config.json`, newConfig, (err) => {
-            if (err) throw err;
-            console.log(`Updated config with mapping:`);
-            console.log(newConfig);
-        });
-        const gadwickNames = features.map((f) => f.feature_name);
-        for (const localFeature of testFiles)
-        {
-            if (!gadwickNames.includes(localFeature))
-            {
-                console.log(`[LOCAL]\t${localFeature}`);
-            }
-        }
+        fs.writeFileSync(`gadwick-config.json`, newConfig);
+        console.log(`Updated config with mapping:`);
+        console.log(newConfig);
     });
 }
 
