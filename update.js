@@ -63,6 +63,7 @@ async function updateStubs()
                 }
             }
         });
+        console.log(`testFiles "${testFiles.join()}`)
         let idMap = [];
         for (const gadwickFeature of features)
         {

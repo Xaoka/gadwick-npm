@@ -16,7 +16,6 @@ let version, IDMapping, config;
 try
 {
   version = require('./package.json').version;
-  IDMapping = require('./mapFile').idMap
   config = require('./gadwick-config.json');
 }
 catch (error)
@@ -28,7 +27,7 @@ const gadwickEndpoint = "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com"
 // TODO: Start a new session on gadwick to associate results with
 class MochaReporter {
   constructor(runner) {
-    if (!version || !IDMapping || !config)
+    if (!version || !config)
     {
       console.error(`Could not find required configuration files - make sure you have run "gadwick configure" and "gadwick update" before using this reporter.`);
       return;
