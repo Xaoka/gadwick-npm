@@ -15,9 +15,9 @@ const Axios = require(`axios`);
 let version, IDMapping, config;
 try
 {
-  version = require('../../package.json').version;
-  IDMapping = require('../../mapFile').idMap
-  config = require('../../gadwick-config.json');
+  version = require('./package.json').version;
+  IDMapping = require('./mapFile').idMap
+  config = require('./gadwick-config.json');
 }
 catch (error)
 {
@@ -30,7 +30,8 @@ class MochaReporter {
   constructor(runner) {
     if (!version || !IDMapping || !config)
     {
-      console.error(`Could not find required configuration files - make sure you have run "gadwick configure" and "gadwick update" before using this reporter.`)
+      console.error(`Could not find required configuration files - make sure you have run "gadwick configure" and "gadwick update" before using this reporter.`);
+      return;
     }
     this._indents = 0;
     const stats = runner.stats;

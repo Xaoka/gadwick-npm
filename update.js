@@ -52,20 +52,21 @@ async function updateStubs()
             return console.log('Unable to scan directory: ' + err);
         } 
         //listing all files using forEach
+        /** All existing file names (Underscore format) */
         const testFiles = []
         files.forEach(function (file) {
             if (fs.statSync(path.join(testSuiteDirectoryPath, file)).isFile()) {
                 if (file.endsWith('.spec.js')) {
                     // Do whatever you want to do with the file
                     // console.log(file); 
-                    testFiles.push(toFeatureName(file).replace('.spec.js', ''));
+                    testFiles.push(file.replace('.spec.js', ''));
                 }
             }
         });
         let idMap = [];
         for (const gadwickFeature of features)
         {
-            if (testFiles.includes(gadwickFeature.name))
+            if (testFiles.includes(toFileName(gadwickFeature.name)))
             {
                 console.log(`[OLD]\t${gadwickFeature.name}`);
             }
@@ -86,7 +87,6 @@ async function updateStubs()
                     `\t})`,
                     `})`
                 ]
-                idMap.push({ id: gadwickFeature.id, name: gadwickFeature.name });
                 const fileName = toFileName(gadwickFeature.name);
                 if (!testFiles.includes(fileName))
                 {
@@ -95,6 +95,8 @@ async function updateStubs()
                     console.log(`\x1b[32m%s\x1b[0m`, `New stub test file created for ${gadwickFeature.name}`);
                 }
             }
+            console.log(`Added "${gadwickFeature.name}" to map`)
+            idMap.push({ id: gadwickFeature.id, name: gadwickFeature.name });
         }
         const gadwickNames = features.map((f) => toFileName(f.name));
         for (const localFeature of testFiles)
@@ -105,7 +107,8 @@ async function updateStubs()
                 // TODO: Push feature to gadwick here
             }
         }
-        const map = config.idMap || { ids: [], names: []};
+        // console.dir(idMap)
+        const map = config.idMap || { ids: {}, names: {}};
         for (const id of idMap)
         {
             map.ids[id.id] = id.name;
@@ -113,8 +116,8 @@ async function updateStubs()
         }
         const newConfig = JSON.stringify({ ...config, idMap: map }, null, 2);
         fs.writeFileSync(`gadwick-config.json`, newConfig);
-        console.log(`Updated config with mapping:`);
-        console.log(newConfig);
+        // console.log(`Updated config with mapping:`);
+        // console.log(newConfig);
     });
 }
 
