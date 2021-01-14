@@ -46,7 +46,7 @@ async function updateStubs()
     // console.dir(response.data.data);
     // console.log(`Found ${features.length} features:\n${features.map((feature) => feature.feature_name).join("\n")}`)
     // TODO: Resolve file name conflicts between local & gadwick
-    fs.readdir(testSuiteDirectoryPath, function (err, files) {
+    fs.readdir(testSuiteDirectoryPath, async function (err, files) {
         //handling error
         if (err) {
             return console.log('Unable to scan directory: ' + err);
@@ -63,7 +63,7 @@ async function updateStubs()
                 }
             }
         });
-        console.log(`testFiles "${testFiles.join()}`)
+        // console.log(`testFiles "${testFiles.join()}`)
         let idMap = [];
         for (const gadwickFeature of features)
         {
@@ -96,7 +96,7 @@ async function updateStubs()
                     console.log(`\x1b[32m%s\x1b[0m`, `New stub test file created for ${gadwickFeature.name}`);
                 }
             }
-            console.log(`Added "${gadwickFeature.name}" to map`)
+            // console.log(`Added "${gadwickFeature.name}" to map`)
             idMap.push({ id: gadwickFeature.id, name: gadwickFeature.name });
         }
         const gadwickNames = features.map((f) => toFileName(f.name));
@@ -105,7 +105,25 @@ async function updateStubs()
             if (!gadwickNames.includes(localFeature))
             {
                 console.log(`[LOCAL]\t${toFeatureName(localFeature)}`);
-                // TODO: Push feature to gadwick here
+                try
+                {
+                    const { id } = await Axios.post(`${gadwickEndpoint}/features/s/${config.client_secret}`, { name: toFeatureName(localFeature), description: "New Feature" });
+                    idMap.push({ id, name: toFeatureName(localFeature) });
+                    console.log(`Registered new feature with Gadwick`);
+                }
+                catch (err)
+                {
+                    if (err.response.status === 302)
+                    {
+                        // console.dir(err.response.data);
+                        idMap.push({ id: err.response.data.id, name: toFeatureName(localFeature) });
+                        console.log(`Found feature match on gadwick`);
+                    }
+                    else
+                    {
+                        console.log(`Failed to register new feature with Gadwick`);
+                    }
+                }
             }
         }
         // console.dir(idMap)

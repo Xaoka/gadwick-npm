@@ -55,7 +55,7 @@ class MochaReporter {
           }
           else
           {
-            console.log(`Uploading results of the test suite for feature "${suite.title} (${id})"`);
+            console.log(`Uploading results of the test suite for feature "${suite.title}" (${id})`);
             try
             {
               Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed: (stats.failures === 0), version, api_key: config.api_key, automated: "TRUE" })
