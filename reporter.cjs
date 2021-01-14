@@ -15,8 +15,8 @@ const Axios = require(`axios`);
 let version, IDMapping, config;
 try
 {
-  version = require('./package.json').version;
-  config = require('./gadwick-config.json');
+  version = require('../../package.json').version;
+  config = require('../../gadwick-config.json');
 }
 catch (error)
 {
