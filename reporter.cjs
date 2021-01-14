@@ -53,8 +53,18 @@ class MochaReporter {
           {
             console.warn(`Could not find a Gadwick feature ID for "${suite.title}" - you may need to run "gadwick update"`)
           }
-          console.log(`Uploading results of the test suite for feature "${suite.title} (${id})"`);
-          Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed: (stats.failures === 0), version, api_key: config.api_key, automated: "TRUE" })
+          else
+          {
+            console.log(`Uploading results of the test suite for feature "${suite.title} (${id})"`);
+            try
+            {
+              Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed: (stats.failures === 0), version, api_key: config.api_key, automated: "TRUE" })
+            }
+            catch (err)
+            {
+              console.warn(`Failed to upload result for feature "${suite.title} (${id})"`);
+            }
+          }
         }
       })
       .on(EVENT_TEST_PASS, test => {
