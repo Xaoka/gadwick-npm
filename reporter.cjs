@@ -48,8 +48,12 @@ class MochaReporter {
         // Dispatch a test result report to Gadwick
         if (suite.title.length > 0)
         {
-          const id =  IDMapping.names[suite.title];
-          console.dir(`Uploading results of the test suite for feature "${suite.title} (${id}"`);
+          const id = config.idMap.names[suite.title];
+          if (!id)
+          {
+            console.warn(`Could not find a Gadwick feature ID for "${suite.title}" - you may need to run "gadwick update"`)
+          }
+          console.log(`Uploading results of the test suite for feature "${suite.title} (${id})"`);
           Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed: (stats.failures === 0), version, api_key: config.api_key, automated: "TRUE" })
         }
       })
