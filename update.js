@@ -42,7 +42,7 @@ async function updateStubs()
         return;
     }
     // Only generate tests for high-priority features
-    features = features.filter((f) => f.priority > 50);
+    const priorityFeatures = features.filter((f) => f.priority > 50);
     // console.dir(response.data.data);
     // console.log(`Found ${features.length} features:\n${features.map((feature) => feature.feature_name).join("\n")}`)
     // TODO: Resolve file name conflicts between local & gadwick
@@ -71,7 +71,7 @@ async function updateStubs()
             {
                 console.log(`[OLD]\t${gadwickFeature.name}`);
             }
-            else
+            else if (priorityFeatures.includes(toFileName(gadwickFeature.name)))
             {
                 console.log(`[NEW]\t${gadwickFeature.name}`);
                 let steps = ["\t\t// Write your test behaviour here."];
@@ -107,7 +107,7 @@ async function updateStubs()
                 console.log(`[LOCAL]\t${toFeatureName(localFeature)}`);
                 try
                 {
-                    const { id } = await Axios.post(`${gadwickEndpoint}/features/s/${config.client_secret}`, { name: toFeatureName(localFeature), description: "New Feature" });
+                    const { id } = (await Axios.post(`${gadwickEndpoint}/features/s/${config.client_secret}`, { name: toFeatureName(localFeature), description: "New Feature" })).data;
                     idMap.push({ id, name: toFeatureName(localFeature) });
                     console.log(`Registered new feature with Gadwick`);
                 }
