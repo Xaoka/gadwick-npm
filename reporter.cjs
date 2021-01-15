@@ -40,42 +40,24 @@ class MochaReporter {
       })
       .on(EVENT_SUITE_BEGIN, () => {
         // console.log(`Suite start`)
-        this.increaseIndent();
       })
       .on(EVENT_SUITE_END, (suite) => {
         // console.log(`Suite end`)
-        this.decreaseIndent();
-        // Dispatch a test result report to Gadwick
-        if (suite.title.length > 0)
-        {
-          const id = config.idMap.names[suite.title];
-          if (!id)
-          {
-            console.warn(`Could not find a Gadwick feature ID for "${suite.title}" - you may need to run "gadwick update"`)
-          }
-          else
-          {
-            console.log(`Uploading results of the test suite for feature "${suite.title}" (${id})`);
-            try
-            {
-              Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed: (stats.failures === 0), version, api_key: config.api_key, automated: "TRUE" })
-            }
-            catch (err)
-            {
-              console.warn(`Failed to upload result for feature "${suite.title} (${id})"`);
-            }
-          }
-        }
+        
       })
       .on(EVENT_TEST_PASS, test => {
         // Test#fullTitle() returns the suite name(s)
         // prepended to the test title
         // console.log(`${this.indent()}pass: ${test.fullTitle()}`);
+        // Dispatch a test result report to Gadwick
+        this.reportResult(test.fullTitle(), true, "");
       })
       .on(EVENT_TEST_FAIL, (test, err) => {
         // console.log(
         //   `${this.indent()}fail: ${test.fullTitle()} - error: ${err.message}`
         // );
+        // Dispatch a test result report to Gadwick
+        this.reportResult(test.fullTitle(), false, err.message);
       })
       .once(EVENT_RUN_END, () => {
         // We WOULD send an entire report here, but cypress runs each spec independently
@@ -83,16 +65,28 @@ class MochaReporter {
       })
   }
 
-  indent() {
-    return Array(this._indents).join('  ');
-  }
-
-  increaseIndent() {
-    this._indents++;
-  }
-
-  decreaseIndent() {
-    this._indents--;
+  reportResult(testName, passed, reason)
+  {
+    if (testName.length > 0)
+    {
+      const id = config.idMap.names[suite.title];
+      if (!id)
+      {
+        console.warn(`Could not find a Gadwick feature ID for "${testName}" - you may need to run "gadwick update"`)
+      }
+      else
+      {
+        console.log(`Uploading results of the test suite for feature "${testName}" (${id})`);
+        try
+        {
+          Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed, version, api_key: config.api_key, automated: "TRUE" });
+        }
+        catch (err)
+        {
+          console.warn(`Failed to upload result for feature "${testName} (${id})"`);
+        }
+      }
+    }
   }
 }
 
