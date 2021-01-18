@@ -45,7 +45,7 @@ class MochaReporter {
         // Dispatch a test result report to Gadwick
         if (suite.title.length > 0)
         {
-          reportResult(config, suite.title, (stats.failures === 0), version, err.message);
+          reportResult(config, suite.title, (stats.failures === 0), version, "");
         }
       })
       .on(EVENT_TEST_PASS, test => {
