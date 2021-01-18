@@ -1,5 +1,5 @@
 const { exec } = require("child_process");
-const reportResult = require("../reporting/api");
+const reportResult = require("../reporting/api.cjs");
 const Axios = require(`axios`);
 
 async function cmd(script)
