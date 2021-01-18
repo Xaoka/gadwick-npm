@@ -12,7 +12,7 @@ const {
   EVENT_SUITE_END
 } = Mocha.Runner.constants;
 const Axios = require(`axios`);
-const reportResult = require('./reporting/api');
+const reportResult = require('./reporting/api.cjs');
 let version, config;
 try
 {
