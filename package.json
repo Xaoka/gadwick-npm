@@ -4,7 +4,8 @@
   "version": "1.0.29",
   "type": "module",
   "scripts": {
-    "update": "node update.ts"
+    "update": "node update.ts",
+    "test": "jest tests"
   },
   "dependencies": {
     "@types/node": "^14.14.0",

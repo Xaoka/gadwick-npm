@@ -41,8 +41,10 @@ async function updateStubs()
         console.log(`Failed to get features from Gadwick.`);
         return;
     }
+    console.log(`Found ${features.length} features.`);
     // Only generate tests for high-priority features
     const priorityFeatures = features.filter((f) => f.priority > 50);
+    console.log(`Found ${priorityFeatures.length} features worth testing.`);
     // console.dir(response.data.data);
     // console.log(`Found ${features.length} features:\n${features.map((feature) => feature.feature_name).join("\n")}`)
     // TODO: Resolve file name conflicts between local & gadwick
@@ -51,14 +53,13 @@ async function updateStubs()
         if (err) {
             return console.log('Unable to scan directory: ' + err);
         } 
+        console.log(`Checking ${testSuiteDirectoryPath}, found ${files.length} files`)
         //listing all files using forEach
         /** All existing file names (Underscore format) */
         const testFiles = []
         files.forEach(function (file) {
             if (fs.statSync(path.join(testSuiteDirectoryPath, file)).isFile()) {
                 if (file.endsWith('.spec.js')) {
-                    // Do whatever you want to do with the file
-                    // console.log(file); 
                     testFiles.push(file.replace('.spec.js', ''));
                 }
             }
@@ -71,7 +72,7 @@ async function updateStubs()
             {
                 console.log(`[OLD]\t${gadwickFeature.name}`);
             }
-            else if (priorityFeatures.includes(toFileName(gadwickFeature.name)))
+            else if (gadwickFeature.priority > 50)
             {
                 console.log(`[NEW]\t${gadwickFeature.name}`);
                 let steps = ["\t\t// Write your test behaviour here."];
@@ -95,6 +96,10 @@ async function updateStubs()
                     fs.writeFileSync(outputFilePath, fileData.join("\n"));
                     console.log(`\x1b[32m%s\x1b[0m`, `New stub test file created for ${gadwickFeature.name}`);
                 }
+            }
+            else
+            {
+                console.log(`Low priority feature: "${gadwickFeature.name}" (${gadwickFeature.priority})`)
             }
             // console.log(`Added "${gadwickFeature.name}" to map`)
             idMap.push({ id: gadwickFeature.id, name: gadwickFeature.name });

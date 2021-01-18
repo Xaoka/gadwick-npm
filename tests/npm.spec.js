@@ -1,4 +1,6 @@
 const { exec } = require("child_process");
+const reportResult = require("../reporting/api");
+const Axios = require(`axios`);
 
 async function cmd(script)
 {
@@ -20,5 +22,20 @@ describe(`NPM Module`, function() {
         // console.log(output)
         await cmd(`rm temp/*.spec.js`)
         // await cmd(`rmdir temp`)
+	})
+})
+describe(`Reporting`, function() {
+	it(`Results register with Gadwick`, async function() {
+        const result = await reportResult({ idMap: { names: { "Reporting": "1234" }} }, "Reporting", true, "0.1.0", "");
+        // console.dir(result);
+        expect(result.id).not.toBeUndefined();
+        const failResult = await reportResult({ idMap: { names: { "Reporting": "1234" }} }, "Reporting", false, "0.1.0", "Testing failures");
+        // console.dir(result);
+        expect(failResult.id).not.toBeUndefined();
+        // const response = await Axios.get(`http://localhost:3003/results/${result.id}`);
+        // expect(response.data.id).toBe(result.id);
+        // expect(response.data.feature_id).toBe("1234");
+        // expect(response.data.automated).toBe("TRUE");
+        // const response = await Axios.delete(`http://localhost:3003/results/${result.id}`);
 	})
 })
