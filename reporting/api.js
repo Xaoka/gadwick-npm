@@ -1,5 +1,5 @@
 const Axios = require(`axios`);
-const gadwickEndpoint = "http://localhost:3003"//https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
+const gadwickEndpoint = "https://3i07lk1jl8.execute-api.us-east-1.amazonaws.com";
 /** Returns { error: string } or { id: string } */
 async function reportResult(config, testName, passed, version, reason)
 {
@@ -13,17 +13,17 @@ async function reportResult(config, testName, passed, version, reason)
         else
         {
             console.log(`Uploading results of the test suite for feature "${testName}" (${id})`);
-        try
-        {
-            const response = await Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed, version, api_key: config.api_key, automated: "TRUE" });
-            // console.dir(response);
-            return response.data;
-        }
-        catch (err)
-        {
-            console.warn(`Failed to upload result for feature "${testName} (${id})"`);
-            console.log(err);
-        }
+            try
+            {
+                const response = await Axios.post(`${gadwickEndpoint}/results`, { feature_id: id, passed, version, api_key: config.api_key, automated: "TRUE" });
+                // console.dir(response);
+                return response.data;
+            }
+            catch (err)
+            {
+                console.warn(`Failed to upload result for feature "${testName} (${id})"`);
+                console.log(err);
+            }
         }
     }
 }
