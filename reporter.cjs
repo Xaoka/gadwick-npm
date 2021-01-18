@@ -50,14 +50,14 @@ class MochaReporter {
         // prepended to the test title
         // console.log(`${this.indent()}pass: ${test.fullTitle()}`);
         // Dispatch a test result report to Gadwick
-        reportResult(config, test.fullTitle(), true, version, "");
+        reportResult(config, test.title, true, version, "");
       })
       .on(EVENT_TEST_FAIL, (test, err) => {
         // console.log(
         //   `${this.indent()}fail: ${test.fullTitle()} - error: ${err.message}`
         // );
         // Dispatch a test result report to Gadwick
-        reportResult(config, test.fullTitle(), false, version, err.message);
+        reportResult(config, test.title, false, version, err.message);
       })
       .once(EVENT_RUN_END, () => {
         // We WOULD send an entire report here, but cypress runs each spec independently

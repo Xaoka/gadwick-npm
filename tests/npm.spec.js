@@ -1,6 +1,7 @@
 const { exec } = require("child_process");
 const reportResult = require("../reporting/api.cjs");
 const Axios = require(`axios`);
+var assert = require('assert');
 
 async function cmd(script)
 {
@@ -28,10 +29,10 @@ describe(`Reporting`, function() {
 	it(`Results register with Gadwick`, async function() {
         const result = await reportResult({ idMap: { names: { "Reporting": "1234" }} }, "Reporting", true, "0.1.0", "");
         // console.dir(result);
-        expect(result.id).not.toBeUndefined();
+        assert(result.id !== undefined);
         const failResult = await reportResult({ idMap: { names: { "Reporting": "1234" }} }, "Reporting", false, "0.1.0", "Testing failures");
         // console.dir(result);
-        expect(failResult.id).not.toBeUndefined();
+        assert(failResult.id !== undefined);
         // const response = await Axios.get(`http://localhost:3003/results/${result.id}`);
         // expect(response.data.id).toBe(result.id);
         // expect(response.data.feature_id).toBe("1234");

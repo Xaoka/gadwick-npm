@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "update": "node update.ts",
-    "test": "jest tests"
+    "test": "mocha tests --reporters reporter.cjs"
   },
   "dependencies": {
     "@types/node": "^14.14.0",
